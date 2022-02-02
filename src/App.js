@@ -1,5 +1,5 @@
 import React from 'react'
-import { Router, Switch, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 import { CoinList, CoinPage, Portfolio } from 'pages';
 
@@ -11,9 +11,9 @@ class App extends React.Component{
       <>
       <Router>
         <Switch>
-          <Route path='/' element={CoinList}/>
-          <Route path='/portfolio' element={Portfolio}/>
-          <Route path='/coin/:coinId' element={CoinPage}/>
+          <Route path='/' ><CoinList/></Route>
+          <Route path='/portfolio'><Portfolio/></Route>
+          <Route path='/coin/:coinId' ><CoinPage/></Route>
         </Switch>
       </Router>
       </>
