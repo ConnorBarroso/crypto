@@ -1,11 +1,15 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-
 import { CoinList, CoinPage, Portfolio } from 'pages';
 
 import './App.css';
 
 class App extends React.Component{
+
+  state ={
+    currency: 'USD'
+  }
+
   render(){
     return(
       <>
