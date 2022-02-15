@@ -2,11 +2,10 @@ import axios from 'axios'
 
 export const get = async (type, data) =>{
   let url 
-  
   switch(type){
       default: return
 
-      case 'market': url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${data.currency}&order=${data.order}_${data.sortBy}&per_page=20&page=1&sparkline=true`
+      case 'market': url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${data.currency}&order=${data.order}_${data.sortBy}&per_page=20&page=${data.page}&sparkline=true`
       break;
       
       case 'coin': url = `https://api.coingecko.com/api/v3/coins/${data.id}`

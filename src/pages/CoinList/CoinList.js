@@ -1,42 +1,41 @@
 import React from 'react'
-import { get } from 'utils'
 import { ListedCoin } from 'components'
+import { get } from 'utils'
 
 class CoinList extends React.Component{
-    state={
-        loading: true,
-        list: [],
+    state = {
+        list:[]
     }
 
-    handleGet = async (type, data) =>{
-       const newList = await get(type, data)
-       this.setState({ list: newList, loading: false })
+    handleGet = async (fetchData) =>{
+       const coinList = await  get('market', fetchData)
+       this.setState({ list: coinList }) 
     }
 
     componentDidMount(){
-        this.handleGet('market', this.props)
+        this.handleGet(this.props.fetchData)
     }
-
+    
     componentDidUpdate(prevProps){
-        if(prevProps!== this.props){
-            this.handleGet('market', this.props)
+        if(prevProps.fetchData !== this.props.fetchData){
+            this.handleGet(this.props.fetchData)
         }
     }
 
     render(){
-        const { list, loading } = this.state
+        
+        
+        
         return(
             <div>
                 {
-                  loading ?  (<div>Loading...</div>):
-                  (
-                    list && list.map( i=>
+                    this.state.list?.map( i=>
                         <ListedCoin 
                             key={i.id} 
                             data={i}
                         />
-                        )
                     )
+                    
                 }
             </div>
         )
