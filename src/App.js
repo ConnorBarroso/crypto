@@ -1,12 +1,12 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom'
 import { CoinList, CoinPage, Portfolio } from 'pages';
+import { HeaderInfo } from 'components';
 import { get } from 'utils';
 import './App.css';
 
 class App extends React.Component{
   state ={
-    //make toggle style based in future to stop unnecessary renders and api calls
     toggle: false,
     fetchData:{
       currency:'usd',
@@ -31,7 +31,6 @@ class App extends React.Component{
   handleCurrencyChange = (newCurrency) =>{
     this.setState(prevState =>({  toggle: false, fetchData: {...prevState.fetchData, currency: newCurrency} }))
     localStorage.setItem('currency', newCurrency)
-    
   }
 
   render(){
@@ -53,6 +52,7 @@ class App extends React.Component{
               toggle && <div>{dropdownArray.map(i => <button onClick={()=>this.handleCurrencyChange(i)} key={i}>{i}</button>)}</div>
             }
           </div>
+          <HeaderInfo/>
         <Switch>
           <Route exact path={'/'} render={()=> <CoinList fetchData={this.state.fetchData} />}/>
           <Route exact path='/portfolio' component={Portfolio}/>
