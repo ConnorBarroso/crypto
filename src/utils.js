@@ -16,6 +16,9 @@ export const get = async (type, data) =>{
 
       case 'coinMarket': url = `https://api.coingecko.com/api/v3/${data.id}/market_chart`
       break;
+
+      case 'global': url= 'https://api.coingecko.com/api/v3/global'
+      break;
   }
 
   try{
