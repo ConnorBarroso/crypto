@@ -2,7 +2,6 @@ import React from 'react'
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom'
 import { CoinList, CoinPage, Portfolio } from 'pages';
 import { HeaderInfo } from 'components';
-import { get } from 'utils';
 import './App.css';
 
 class App extends React.Component{
@@ -14,7 +13,7 @@ class App extends React.Component{
       order: 'desc',
       page: 1
     },
-    portfolio:{}
+    portfolio:[]
   }
   
   
@@ -28,9 +27,28 @@ class App extends React.Component{
     this.setState({ toggle: !this.state.toggle  })
   }
 
-  handleCurrencyChange = (newCurrency) =>{
-    this.setState(prevState =>({  toggle: false, fetchData: {...prevState.fetchData, currency: newCurrency} }))
-    localStorage.setItem('currency', newCurrency)
+  handleFetchDataChange = (type, value) =>{
+    switch(type){
+      default: console.error('unknown type') 
+      break;
+
+      case 'currency':  
+        this.setState(prevState =>({  toggle: false, fetchData: {...prevState.fetchData, currency: value} }))
+        localStorage.setItem('currency', value)
+      break;
+
+      case 'sortBy' :
+        if( value === this.state.fetchData.sortBy) return
+        this.setState(prevState =>({  fetchData: {...prevState.fetchData, sortBy: value} }))
+      break;
+
+      case 'order':
+        if( value === this.state.fetchData.order) return
+        this.setState(prevState =>({  fetchData: {...prevState.fetchData, order: value} }))
+      break;
+
+    }
+     
   }
 
   render(){
@@ -49,12 +67,12 @@ class App extends React.Component{
             <div>{currency}</div>
             <button onClick={this.handleToggle}>↓</button>
             {
-              toggle && <div>{dropdownArray.map(i => <button onClick={()=>this.handleCurrencyChange(i)} key={i}>{i}</button>)}</div>
+              toggle && <div>{dropdownArray.map(i => <button onClick={()=>this.handleFetchDataChange('currency',i)} key={i}>{i}</button>)}</div>
             }
           </div>
           <HeaderInfo/>
         <Switch>
-          <Route exact path={'/'} render={()=> <CoinList fetchData={this.state.fetchData} />}/>
+          <Route exact path={'/'} render={()=> <CoinList fetchData={this.state.fetchData} handleFetchDataChange={this.handleFetchDataChange} />}/>
           <Route exact path='/portfolio' component={Portfolio}/>
           <Route exact path='/coin/:coinId/' component={CoinPage}/>
         </Switch>
