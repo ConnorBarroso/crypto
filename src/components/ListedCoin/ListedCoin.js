@@ -1,10 +1,8 @@
 import { Link } from 'react-router-dom'
 
-const ListedCoin = ({data}) =>{
-    const { id, name, image, current_price, price_change_percentage_1h_in_currency, price_change_percentage_24h_in_currency, price_change_percentage_7d_in_currency, circulating_supply, total_supply, market_cap, total_volume  } = data
-    const rounding = (number) =>{
-        return Math.round((number + Number.EPSILON)*100)/ 100
-    }
+const ListedCoin = (props) =>{
+    const { id, name, image, current_price, price_change_percentage_1h_in_currency, price_change_percentage_24h_in_currency, price_change_percentage_7d_in_currency, circulating_supply, total_supply, market_cap, total_volume  } = props.data
+    const rounding = props.rounding
     const hourChange = rounding(price_change_percentage_1h_in_currency)
     const dayChange = rounding(price_change_percentage_24h_in_currency)
     const weekChange = rounding(price_change_percentage_7d_in_currency)

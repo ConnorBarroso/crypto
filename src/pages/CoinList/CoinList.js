@@ -31,12 +31,15 @@ class CoinList extends React.Component{
     }
 
     handleDisplayOrderChange = (display) =>{
-        const newDisplay = display
-        this.setState({displayOrder: newDisplay})
+        this.setState({displayOrder: display})
     }
 
     handleDescendingToggle = () =>{
         this.setState({descending: !this.state.descending})
+    }
+
+    handleRounding = (number) =>{
+        return Math.round((number + Number.EPSILON)*100)/ 100
     }
 
 
@@ -79,6 +82,7 @@ class CoinList extends React.Component{
                             <ListedCoin 
                                 key={i.id} 
                                 data={i}
+                                rounding = {this.handleRounding}
                             />
                         )
                     
