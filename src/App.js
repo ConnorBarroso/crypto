@@ -20,7 +20,9 @@ class App extends React.Component{
 
   componentDidMount(){
     const localCurrency = localStorage.getItem('currency')
-    localCurrency && this.setState(prevState =>({ fetchData:{ ...prevState.fetchData, currency: localCurrency } }))
+    const localSortBy = localStorage.getItem('sortBy')
+    const localOrder = localStorage.getItem('order')
+    localCurrency && this.setState(prevState =>({ fetchData:{ ...prevState.fetchData, sortBy: localSortBy, currency: localCurrency, order: localOrder } }))
   }
 
   handleToggle = () =>{
@@ -28,27 +30,9 @@ class App extends React.Component{
   }
 
   handleFetchDataChange = (type, value) =>{
-    switch(type){
-      default: console.error('unknown type') 
-      break;
-
-      case 'currency':  
-        this.setState(prevState =>({  toggle: false, fetchData: {...prevState.fetchData, currency: value} }))
-        localStorage.setItem('currency', value)
-      break;
-
-      case 'sortBy' :
-        if( value === this.state.fetchData.sortBy) return
-        this.setState(prevState =>({  fetchData: {...prevState.fetchData, sortBy: value} }))
-      break;
-
-      case 'order':
-        if( value === this.state.fetchData.order) return
-        this.setState(prevState =>({  fetchData: {...prevState.fetchData, order: value} }))
-      break;
-
-    }
-     
+    if(value === this.state.fetchData[type]) return
+    this.setState(prevState =>({  toggle: false, fetchData: {...prevState.fetchData, [type]: value} }))
+    localStorage.setItem(type, value) 
   }
 
   render(){
@@ -57,7 +41,6 @@ class App extends React.Component{
     const currencyArray= [ 'usd', 'cad', 'eur', 'gbp' ]
     const dropdownArray = currencyArray.filter(i => i !== currency)
     return(
-      <>
       <Router>
           <nav>
             <Link to='/'>Coins</Link>
@@ -77,7 +60,6 @@ class App extends React.Component{
           <Route exact path='/coin/:coinId/' component={CoinPage}/>
         </Switch>
       </Router>
-      </>
     )
   }
 }
