@@ -7,8 +7,12 @@ import {
   Redirect,
 } from "react-router-dom";
 import { CoinList, CoinPage, Portfolio } from "pages";
-import { HeaderInfo } from "components";
+import { HeaderInfo, NavBar } from "components";
 import "./App.css";
+import styled from "styled-components";
+const PageWrapper = styled.div`
+  margin-bottom: 75px;
+`;
 
 class App extends React.Component {
   state = {
@@ -18,6 +22,8 @@ class App extends React.Component {
       sortBy: "market_cap",
       order: "desc",
       page: 1,
+      days: 90,
+      id: "bitcoin",
     },
     portfolio: [],
   };
@@ -53,45 +59,33 @@ class App extends React.Component {
   render() {
     const { toggle, fetchData } = this.state;
     const { currency } = fetchData;
-    const currencyArray = ["usd", "cad", "eur", "gbp"];
-    const dropdownArray = currencyArray.filter((i) => i !== currency);
     return (
       <Router>
-        <nav>
-          <Link to="/">Coins</Link>
-          <Link to="/portfolio">Portfolio</Link>
-        </nav>
-        <div>
-          <div>{currency}</div>
-          <button onClick={this.handleToggle}>↓</button>
-          {toggle && (
-            <div>
-              {dropdownArray.map((i) => (
-                <button
-                  onClick={() => this.handleFetchDataChange("currency", i)}
-                  key={i}
-                >
-                  {i}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+        <Redirect to="/coins" />
+        <NavBar
+          toggle={toggle}
+          currency={currency}
+          handleToggle={this.handleToggle}
+          handleFetchDataChange={this.handleFetchDataChange}
+          toggleTheme={this.props.toggleTheme}
+        />
         <HeaderInfo />
-        <Switch>
-          <Route
-            exact
-            path={"/"}
-            render={() => (
-              <CoinList
-                fetchData={this.state.fetchData}
-                handleFetchDataChange={this.handleFetchDataChange}
-              />
-            )}
-          />
-          <Route exact path="/portfolio" component={Portfolio} />
-          <Route exact path="/coin/:coinId/" component={CoinPage} />
-        </Switch>
+        <PageWrapper>
+          <Switch>
+            <Route
+              exact
+              path={"/coins"}
+              render={() => (
+                <CoinList
+                  fetchData={this.state.fetchData}
+                  handleFetchDataChange={this.handleFetchDataChange}
+                />
+              )}
+            />
+            <Route exact path="/portfolio" component={Portfolio} />
+            <Route exact path="/coins/:coinId/" component={CoinPage} />
+          </Switch>
+        </PageWrapper>
       </Router>
     );
   }

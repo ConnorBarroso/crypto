@@ -18,12 +18,7 @@ class HeaderInfo extends React.Component {
 
   render() {
     const { data, loading } = this.state;
-    const {
-      active_cryptocurrencies,
-      markets,
-      market_cap_percentage,
-      market_cap_change_percentage_24h_usd,
-    } = data;
+    const { active_cryptocurrencies, markets, market_cap_percentage } = data;
     return (
       <div>
         {loading ? (

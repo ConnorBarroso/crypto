@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { rounding } from "utils";
 
 const ListedCoin = (props) => {
   const {
@@ -14,7 +15,6 @@ const ListedCoin = (props) => {
     market_cap,
     total_volume,
   } = props.data;
-  const rounding = props.rounding;
   const hourChange = rounding(price_change_percentage_1h_in_currency);
   const dayChange = rounding(price_change_percentage_24h_in_currency);
   const weekChange = rounding(price_change_percentage_7d_in_currency);
@@ -23,7 +23,7 @@ const ListedCoin = (props) => {
 
   return (
     <div>
-      <Link to={`/coin/${id}`}>{name}</Link>
+      <Link to={`/coins/${id}`}>{name}</Link>
       <img src={image} alt="coin-logo" />
       <div>Current price: {current_price}</div>
       <div>change 1 hour: {hourChange}%</div>
