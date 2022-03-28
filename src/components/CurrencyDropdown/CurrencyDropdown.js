@@ -4,12 +4,22 @@ const CurrencyDropdown = (props) => {
   const { currency, handleFetchDataChange } = props;
   const currencyArray = ["usd", "cad", "eur", "gbp"];
   const handleOnChange = (e) => {
-    handleFetchDataChange("currency", e.target.value);
+    const symbols = {
+      usd: "$",
+      cad: "$",
+      eur: "€",
+      gbp: "£",
+    };
+    const currencyObject = {
+      string: e.target.value,
+      symbol: symbols[e.target.value],
+    };
+    handleFetchDataChange("currency", currencyObject);
   };
   return (
     <Container>
-      <Symbol>$</Symbol>
-      <StyledSelect onChange={handleOnChange} value={currency}>
+      <Symbol>{currency.symbol}</Symbol>
+      <StyledSelect onChange={handleOnChange} value={currency.string}>
         {currencyArray.map((i) => (
           <option value={i} key={i}>
             {i}

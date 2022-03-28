@@ -31,9 +31,6 @@ export const Symbol = styled.div`
   justify-content: center;
   margin: 0 8px 0 0;
   font-weight: 400;
-  @media (max-width: ${({ theme }) => theme.breakPoints.tablet}) {
-    display: none;
-  }
 `;
 
 export const StyledSelect = styled.select`

@@ -22,7 +22,15 @@ export const StyledPrevArrow = styled(PrevArrowIcon)`
     fill: ${({ theme }) => theme.colors.text};
   }
 `;
-
+export const SlickContainer = styled.div`
+  background-color: ${({ theme }) => theme.colors.off};
+  border-radius: 10px;
+  padding: 15px;
+  padding-left: 4px;
+  width: 330px;
+  height: 230px;
+  margin: auto;
+`;
 export const SliderContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -37,8 +45,7 @@ export const SliderContainer = styled.div`
     visibility: hidden;
   }
   .slick-slider {
-    width: 80%;
-
+    width: 100%;
     position: relative;
     display: flex;
     align-items: center;
@@ -58,7 +65,6 @@ export const SliderContainer = styled.div`
   .slick-list {
     overflow: hidden;
     margin: 0;
-    border-radius: 10px;
   }
   .slick-list:focus {
     outline: 0;
@@ -78,7 +84,6 @@ export const SliderContainer = styled.div`
   .slick-track {
     top: 0;
     left: 0;
-    background-color: ${({ theme }) => theme.colors.off};
   }
   .slick-track:after,
   .slick-track:before {
@@ -123,7 +128,7 @@ export const SliderContainer = styled.div`
   .slick-arrow {
     position: absolute;
     cursor: pointer;
-    top: 20px;
+    top: 5px;
   }
   .slick-next {
     right: 20px;

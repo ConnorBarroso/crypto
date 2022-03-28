@@ -18,7 +18,7 @@ class App extends React.Component {
   state = {
     toggle: false,
     fetchData: {
-      currency: "usd",
+      currency: { string: "usd", symbol: "$" },
       sortBy: "market_cap",
       order: "desc",
       page: 1,
@@ -29,7 +29,7 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    const localCurrency = localStorage.getItem("currency");
+    const localCurrency = JSON.parse(localStorage.getItem("currency"));
     const localSortBy = localStorage.getItem("sortBy");
     const localOrder = localStorage.getItem("order");
     localCurrency &&
@@ -53,7 +53,7 @@ class App extends React.Component {
       toggle: false,
       fetchData: { ...prevState.fetchData, [type]: value },
     }));
-    localStorage.setItem(type, value);
+    localStorage.setItem(type, JSON.stringify(value));
   };
 
   render() {
@@ -62,14 +62,16 @@ class App extends React.Component {
     return (
       <Router>
         <Redirect to="/coins" />
-        <NavBar
-          toggle={toggle}
-          currency={currency}
-          handleToggle={this.handleToggle}
-          handleFetchDataChange={this.handleFetchDataChange}
-          toggleTheme={this.props.toggleTheme}
-        />
-        <HeaderInfo />
+        <div className="header">
+          <NavBar
+            toggle={toggle}
+            currency={currency}
+            handleToggle={this.handleToggle}
+            handleFetchDataChange={this.handleFetchDataChange}
+            toggleTheme={this.props.toggleTheme}
+          />
+          <HeaderInfo />
+        </div>
         <PageWrapper>
           <Switch>
             <Route

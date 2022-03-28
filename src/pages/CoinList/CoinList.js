@@ -33,7 +33,7 @@ class CoinList extends React.Component {
       const list = await getCoinList(fetchData);
       this.setState({ list });
       if (
-        prevFetchData.currency !== fetchData.currency ||
+        prevFetchData.currency.string !== fetchData.currency.string ||
         prevFetchData.days !== fetchData.days
       ) {
         const graphData = await getGraphData(fetchData);
@@ -57,6 +57,7 @@ class CoinList extends React.Component {
 
   render() {
     const { list, top, descending, displayOrder, graphData } = this.state;
+    const symbol = this.props.fetchData.currency.symbol;
 
     let direction;
     if (!top) {
@@ -89,7 +90,10 @@ class CoinList extends React.Component {
                 <GraphContainer>
                   <GraphLabelContainer>
                     <LabelSymbol>{sorted?.[0]?.symbol}</LabelSymbol>
-                    <LabelValue>{sorted?.[0]?.current_price}</LabelValue>
+                    <LabelValue>
+                      {symbol}
+                      {sorted?.[0]?.current_price}
+                    </LabelValue>
                     <LabelDate>{formatCurrentDate}</LabelDate>
                   </GraphLabelContainer>
                   <LineGraph dates={priceDates} sparkline={priceSparkline} />
@@ -98,6 +102,7 @@ class CoinList extends React.Component {
                   <GraphLabelContainer>
                     <LabelVolume>Volume 24h</LabelVolume>
                     <LabelValue>
+                      {symbol}
                       {volumeSparkline[volumeSparkline.length - 1]}
                     </LabelValue>
                     <LabelDate>{formatCurrentDate}</LabelDate>
@@ -164,7 +169,7 @@ class CoinList extends React.Component {
                 </button>
               </div>
               {sorted?.map((i) => (
-                <ListedCoin key={i.id} data={i} />
+                <ListedCoin key={i.id} symbol={symbol} data={i} />
               ))}
             </>
           )}
