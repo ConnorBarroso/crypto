@@ -7,6 +7,7 @@ import {
   SliderContainer,
   StyledNextArrow,
   StyledPrevArrow,
+  SlickContainer,
 } from "./Carousel.styles";
 import { Children } from "react/cjs/react.production.min";
 
@@ -30,9 +31,11 @@ class DemoCarousel extends Component {
       prevArrow: <PrevArrow />,
     };
     return (
-      <SliderContainer>
-        <Slider {...settings}>{this.props.children}</Slider>
-      </SliderContainer>
+      <SlickContainer>
+        <SliderContainer>
+          <Slider {...settings}>{this.props.children}</Slider>
+        </SliderContainer>
+      </SlickContainer>
     );
   }
 }

@@ -1,11 +1,9 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { StyledLine } from "./LineGraph.styles";
-import { Chart as ChartJS } from "chart.js/auto";
+import { Chart as ChartJS } from "chart.js";
 import format from "date-fns/format";
-import { Line } from "react-chartjs-2";
 
-const LineGraph = (props) => {
-  const { sparkline, dates } = props;
+const LineGraph = ({ sparkline, dates }) => {
   const tooltipDates = dates?.map((i) => format(i, "dd-MM-yyyy"));
   const labelDates = dates?.map((i) => format(i, "dd"));
 
@@ -13,7 +11,14 @@ const LineGraph = (props) => {
     labels: labelDates,
     datasets: [
       {
+        borderColor: "#ff6c23",
+        borderWidth: 2,
+        pointColor: "#fff",
+        pointStrokeColor: "#ff6c23",
+        pointHighlightFill: "#fff",
+        pointHighlightStroke: "#ff6c23",
         data: sparkline,
+        backgroundColor: "black",
       },
     ],
   };
@@ -35,8 +40,7 @@ const LineGraph = (props) => {
 
     elements: {
       line: {
-        fill: true,
-        borderColor: ["#00ff5f"],
+        borderColor: "#00ff5f",
         tension: 0.1,
       },
       point: {
@@ -58,7 +62,7 @@ const LineGraph = (props) => {
       },
     },
   };
-  return <StyledLine data={data} options={options} />;
+  return <StyledLine data={data} type="line" options={options} />;
 };
 
 export default LineGraph;

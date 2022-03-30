@@ -1,15 +1,15 @@
 import React from "react";
 import { get } from "utils";
+import { Container, StyledList, StyledItem } from "./HeaderInfo.styles";
 
 class HeaderInfo extends React.Component {
   state = {
     data: {},
-    loading: true,
   };
 
   handleGet = async () => {
     const globalData = await get("global");
-    this.setState({ data: globalData.data, loading: false });
+    this.setState({ data: globalData.data });
   };
 
   componentDidMount() {
@@ -17,25 +17,26 @@ class HeaderInfo extends React.Component {
   }
 
   render() {
-    const { data, loading } = this.state;
+    const { data } = this.state;
     const { active_cryptocurrencies, markets, market_cap_percentage } = data;
+    if (!data) {
+      return <div>Loading...</div>;
+    }
     return (
-      <div>
-        {loading ? (
-          <div>Loading...</div>
-        ) : (
-          <div>
-            {data && (
-              <ul>
-                <li>Coins: {active_cryptocurrencies}</li>
-                <li>Exchange: {markets}</li>
-                <li>BTC: {Math.round(market_cap_percentage.btc)}%</li>
-                <li>ETH: {Math.round(market_cap_percentage.eth)}%</li>
-              </ul>
-            )}
-          </div>
+      <Container>
+        {data && (
+          <StyledList>
+            <StyledItem>Coins: {active_cryptocurrencies}</StyledItem>
+            <StyledItem>Exchange: {markets}</StyledItem>
+            <StyledItem>
+              BTC: {Math.round(market_cap_percentage?.btc)}%
+            </StyledItem>
+            <StyledItem>
+              ETH: {Math.round(market_cap_percentage?.eth)}%
+            </StyledItem>
+          </StyledList>
         )}
-      </div>
+      </Container>
     );
   }
 }

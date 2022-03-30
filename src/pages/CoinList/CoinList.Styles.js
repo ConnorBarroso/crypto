@@ -1,6 +1,6 @@
 import { Children } from "react/cjs/react.development";
 import styled from "styled-components";
-
+const transparency = 95;
 export const GraphContainer = styled.div`
   margin: auto;
   max-width: 600px;
@@ -9,8 +9,9 @@ export const GraphContainer = styled.div`
 
 export const GraphLabelContainer = styled.div`
   position: absolute;
-  left: 20px;
-  top: 13px;
+  left: 11px;
+  background-color: ${({ theme }) => theme.colors.off}${transparency};
+  box-shadow: 10px 10px 8px ${({ theme }) => theme.colors.off}${transparency};
 `;
 
 export const LabelSymbol = styled.p`
