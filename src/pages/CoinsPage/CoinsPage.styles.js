@@ -1,8 +1,15 @@
-import styled from "styled-components";
-import { Chart } from "react-chartjs-2";
+import { Children } from "react/cjs/react.development";
+import styled, { css } from "styled-components";
 
-export const StyledLine = styled(Chart)`
-  margin: 70px 0 10px;
+export const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.off};
+  padding-top: 25px;
+  @media (max-width: ${({ theme }) => theme.breakPoints.mobile}) {
+    background-color: ${({ theme }) => theme.colors.main};
+  }
 `;
 
 export const GraphContainer = styled.div`
@@ -37,7 +44,6 @@ export const LabelSymbol = styled.p`
   font-weight: medium;
   text-transform: uppercase;
 `;
-
 export const LabelVolume = styled.p`
   color: ${({ theme }) => theme.colors.text};
   margin: 0;
@@ -56,4 +62,13 @@ export const LabelDate = styled.p`
   margin: 0;
   font-size: 11px;
   font-weight: medium;
+`;
+
+export const DesktopGraphContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 90vw;
+  @media (max-width: ${({ theme }) => theme.breakPoints.mobile}) {
+    display: none;
+  }
 `;
