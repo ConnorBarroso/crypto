@@ -18,6 +18,7 @@ const darkTheme = {
     off: "#2C2F36",
     text: "white",
     highlight: "#00ff5f",
+    error: "red",
   },
   themeType: "dark",
 };
@@ -29,6 +30,7 @@ const lightTheme = {
     off: "#EDEFF2",
     text: "black",
     highlight: "#00ff5f",
+    error: "red",
   },
   themeType: "light",
 };

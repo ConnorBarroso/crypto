@@ -23,6 +23,7 @@ export const StyledPrevArrow = styled(PrevArrowIcon)`
   }
 `;
 export const SlickContainer = styled.div`
+  display: none;
   background-color: ${({ theme }) => theme.colors.off};
   border-radius: 10px;
   padding: 15px;
@@ -30,6 +31,9 @@ export const SlickContainer = styled.div`
   width: 330px;
   height: 230px;
   margin: auto;
+  @media (max-width: ${({ theme }) => theme.breakPoints.mobile}) {
+    display: block;
+  }
 `;
 export const SliderContainer = styled.div`
   display: flex;

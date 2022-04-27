@@ -6,13 +6,9 @@ import {
   Link,
   Redirect,
 } from "react-router-dom";
-import { CoinList, CoinPage, Portfolio } from "pages";
+import { CoinsPage, CoinPage, Portfolio } from "pages";
 import { HeaderInfo, NavBar } from "components";
-import "./App.css";
-import styled from "styled-components";
-const PageWrapper = styled.div`
-  margin-bottom: 75px;
-`;
+import { StyledHeader, PageWrapper } from "./App.styles";
 
 class App extends React.Component {
   state = {
@@ -53,7 +49,11 @@ class App extends React.Component {
       toggle: false,
       fetchData: { ...prevState.fetchData, [type]: value },
     }));
-    localStorage.setItem(type, JSON.stringify(value));
+    if (type === "currency") {
+      localStorage.setItem(type, JSON.stringify(value));
+      return;
+    }
+    localStorage.setItem(type, value);
   };
 
   render() {
@@ -62,7 +62,7 @@ class App extends React.Component {
     return (
       <Router>
         <Redirect to="/coins" />
-        <div className="header">
+        <StyledHeader>
           <NavBar
             toggle={toggle}
             currency={currency}
@@ -71,14 +71,14 @@ class App extends React.Component {
             toggleTheme={this.props.toggleTheme}
           />
           <HeaderInfo />
-        </div>
+        </StyledHeader>
         <PageWrapper>
           <Switch>
             <Route
               exact
               path={"/coins"}
               render={() => (
-                <CoinList
+                <CoinsPage
                   fetchData={this.state.fetchData}
                   handleFetchDataChange={this.handleFetchDataChange}
                 />
