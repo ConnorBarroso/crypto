@@ -20,8 +20,7 @@ import {
 import { ProgressBar, TableGraph } from "components";
 
 const ListedCoin = (props) => {
-  const currencyString = props.string;
-  const { index } = props;
+  const { index, currency } = props;
   const {
     id,
     symbol,
@@ -39,9 +38,10 @@ const ListedCoin = (props) => {
     offColor,
     sparkline_in_7d,
   } = props.data;
+
   const formatter = new Intl.NumberFormat(undefined, {
     style: "currency",
-    currency: currencyString,
+    currency: currency,
   });
 
   const price = formatter.format(rounding(current_price));

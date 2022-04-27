@@ -9,65 +9,33 @@ import {
 import { CoinsPage, CoinPage, Portfolio } from "pages";
 import { HeaderInfo, NavBar } from "components";
 import { StyledHeader, PageWrapper } from "./App.styles";
-
+// look into redux persist
 class App extends React.Component {
   state = {
-    toggle: false,
-    fetchData: {
-      currency: { string: "usd", symbol: "$" },
-      sortBy: "market_cap",
-      order: "desc",
-      page: 1,
-      days: 90,
-      id: "bitcoin",
-    },
+    currency: "usd",
     portfolio: [],
   };
 
   componentDidMount() {
-    const localCurrency = JSON.parse(localStorage.getItem("currency"));
-    const localSortBy = localStorage.getItem("sortBy");
-    const localOrder = localStorage.getItem("order");
-    localCurrency &&
-      this.setState((prevState) => ({
-        fetchData: {
-          ...prevState.fetchData,
-          sortBy: localSortBy,
-          currency: localCurrency,
-          order: localOrder,
-        },
-      }));
+    const localCurrency = localStorage.getItem("currency");
+    localCurrency && this.setState({ currency: localCurrency });
   }
 
-  handleToggle = () => {
-    this.setState({ toggle: !this.state.toggle });
-  };
-
-  handleFetchDataChange = (type, value) => {
-    if (value === this.state.fetchData[type]) return;
-    this.setState((prevState) => ({
-      toggle: false,
-      fetchData: { ...prevState.fetchData, [type]: value },
-    }));
-    if (type === "currency") {
-      localStorage.setItem(type, JSON.stringify(value));
-      return;
-    }
-    localStorage.setItem(type, value);
+  handleCurrency = (value) => {
+    this.setState({ currency: value });
+    localStorage.setItem("currency", value);
   };
 
   render() {
-    const { toggle, fetchData } = this.state;
-    const { currency } = fetchData;
+    const currency = this.state.currency;
+
     return (
       <Router>
         <Redirect to="/coins" />
         <StyledHeader>
           <NavBar
-            toggle={toggle}
             currency={currency}
-            handleToggle={this.handleToggle}
-            handleFetchDataChange={this.handleFetchDataChange}
+            handleCurrency={this.handleCurrency}
             toggleTheme={this.props.toggleTheme}
           />
           <HeaderInfo />
@@ -77,12 +45,7 @@ class App extends React.Component {
             <Route
               exact
               path={"/coins"}
-              render={() => (
-                <CoinsPage
-                  fetchData={this.state.fetchData}
-                  handleFetchDataChange={this.handleFetchDataChange}
-                />
-              )}
+              render={() => <CoinsPage currency={currency} />}
             />
             <Route exact path="/portfolio" component={Portfolio} />
             <Route exact path="/coins/:coinId/" component={CoinPage} />

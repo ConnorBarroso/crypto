@@ -20,7 +20,7 @@ const ProgressBar = ({
       return "∞";
     }
     if (number === 0) {
-      return "";
+      return "0";
     }
     const abbreviated = Intl.NumberFormat("en-US", {
       notation: "compact",
