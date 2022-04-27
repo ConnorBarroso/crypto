@@ -5,7 +5,7 @@ import { rounding } from "utils";
 const TableGraph = ({ sparkline, percentage }) => {
   const prices = sparkline?.price.map((number) => JSON.parse(rounding(number)));
   const reducedPrices = prices?.filter((element, i) => i % 5 === 5 - 1);
-  const indexes = reducedPrices.map((element, i) => i);
+  const indexes = reducedPrices?.map((element, i) => i);
 
   const stringPercentage = `${percentage}`;
   const color = () => {

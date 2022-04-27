@@ -3,10 +3,10 @@ const arrow = { down: "▼", up: "▲" };
 
 const before = css`
   ${({ isNegative, isHeading }) =>
-    !isHeading && isNegative ? `${arrow.down}` : `${arrow.up}`}
+    !isHeading && isNegative ? arrow.down : arrow.up}
 `;
 
-const logic = css`
+const variableText = css`
   p {
     color: ${({ isNegative, theme }) =>
       isNegative ? theme.colors.error : theme.colors.highlight};
@@ -75,7 +75,7 @@ export const TableHour = styled.span`
   overflow: hidden;
   text-align: center;
 
-  ${logic}
+  ${variableText}
 `;
 export const TableDay = styled.span`
   flex: 1;
@@ -83,14 +83,14 @@ export const TableDay = styled.span`
   overflow: hidden;
   text-align: center;
 
-  ${logic}
+  ${variableText}
 `;
 export const TableWeek = styled.span`
   flex: 1;
   min-width: 15px;
   text-align: center;
   overflow: hidden;
-  ${logic}
+  ${variableText}
 `;
 export const TableMarketCap = styled.span`
   flex: 2;

@@ -15,8 +15,7 @@ import {
 import MobileNavBar from "components/MobileNavBar";
 
 const NavBar = (props) => {
-  const { currency, toggle, handleToggle, handleFetchDataChange, toggleTheme } =
-    props;
+  const { currency, handleCurrency, toggleTheme } = props;
 
   const pathnameArray = props.location.pathname.split("/");
   const title = pathnameArray[pathnameArray.length - 1];
@@ -38,9 +37,7 @@ const NavBar = (props) => {
           <StyledInput placeholder="Search..." />
           <CurrencyDropdown
             currency={currency}
-            toggle={toggle}
-            handleFetchDataChange={handleFetchDataChange}
-            handleToggle={handleToggle}
+            handleCurrency={handleCurrency}
           />
           <StyledThemeIcon onClick={toggleTheme} />
         </SearchContainer>

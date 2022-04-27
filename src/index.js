@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { ThemeProvider } from "styled-components";
+import { Body } from "./index.styles";
 
 const breakPoints = {
   laptop: "1200px",
@@ -53,6 +54,7 @@ class CryptoApp extends React.Component {
     return (
       <React.StrictMode>
         <ThemeProvider theme={this.state.isDarkTheme ? darkTheme : lightTheme}>
+          <Body />
           <App toggleTheme={this.toggleTheme} />
         </ThemeProvider>
       </React.StrictMode>
