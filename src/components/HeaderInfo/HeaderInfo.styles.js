@@ -4,7 +4,6 @@ export const Container = styled.div`
   background-color: ${({ theme }) => theme.colors.main};
   border-radius: 0 0 10px 10px;
   width: 60%;
-
   padding: 10px 0;
   @media (max-width: ${({ theme }) => theme.breakPoints.mobile}) {
     border-radius: 0px;
@@ -21,6 +20,8 @@ export const StyledList = styled.ul`
 `;
 
 export const StyledItem = styled.li`
+  display: flex;
   all: unset;
   color: ${({ theme }) => theme.colors.text};
+  width: 50px;
 `;

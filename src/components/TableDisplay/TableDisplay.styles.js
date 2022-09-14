@@ -47,6 +47,11 @@ export const HeadingContainer = styled.div`
   }
 `;
 
+export const ListContainer = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
 export const TableItems = styled.p`
   all: unset;
   color: ${({ theme }) => theme.colors.text};
@@ -78,6 +83,10 @@ export const TableHour = styled.span`
   ${variableText}
 `;
 export const TableDay = styled.span`
+  display: block;
+  @media (max-width: ${({ theme }) => theme.breakPoints.mobile}) {
+    display: none;
+  }
   flex: 1;
   min-width: 15px;
   overflow: hidden;
@@ -93,18 +102,31 @@ export const TableWeek = styled.span`
   ${variableText}
 `;
 export const TableMarketCap = styled.span`
+  display: block;
+  @media (max-width: ${({ theme }) => theme.breakPoints.miniTablet}) {
+    display: none;
+  }
   flex: 2;
   min-width: 20px;
   margin: 0 20px;
   text-align: center;
 `;
 export const TableSupply = styled.span`
+  display: block;
+  @media (max-width: ${({ theme }) => theme.breakPoints.tablet}) {
+    display: none;
+  }
   flex: 2;
   min-width: 20px;
   text-align: center;
 `;
 
 export const TableGraphContainer = styled.span`
+  display: block;
+  @media (max-width: ${({ theme }) => theme.breakPoints.laptop}) {
+    display: none;
+  }
+
   flex: 2;
   min-width: 150px;
   text-align: right;

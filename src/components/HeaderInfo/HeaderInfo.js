@@ -1,5 +1,7 @@
 import React from "react";
 import { get } from "utils";
+import { ProgressBar } from "components";
+import { Bar, Filled } from "../ProgressBar/ProgressBar.styles";
 import { Container, StyledList, StyledItem } from "./HeaderInfo.styles";
 
 class HeaderInfo extends React.Component {
@@ -22,6 +24,10 @@ class HeaderInfo extends React.Component {
     if (!data) {
       return <div>Loading...</div>;
     }
+    const btcPercent = Math.round(market_cap_percentage?.btc);
+    const ethPercent = Math.round(market_cap_percentage?.btc);
+    const mainColor = "";
+    const offColor = "";
     return (
       <Container>
         {data && (
@@ -29,10 +35,22 @@ class HeaderInfo extends React.Component {
             <StyledItem>Coins: {active_cryptocurrencies}</StyledItem>
             <StyledItem>Exchange: {markets}</StyledItem>
             <StyledItem>
-              BTC: {Math.round(market_cap_percentage?.btc)}%
+              BTC:
+              <ProgressBar
+                percentage={btcPercent}
+                mainColor={"white"}
+                offColor={"blue"}
+                compact={true}
+              />
             </StyledItem>
             <StyledItem>
-              ETH: {Math.round(market_cap_percentage?.eth)}%
+              <span>ETH:</span>
+              <ProgressBar
+                percentage={ethPercent}
+                mainColor={"white"}
+                offColor={"blue"}
+                compact={true}
+              />
             </StyledItem>
           </StyledList>
         )}

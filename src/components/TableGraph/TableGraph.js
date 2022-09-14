@@ -4,24 +4,26 @@ import { rounding } from "utils";
 
 const TableGraph = ({ sparkline, percentage }) => {
   const prices = sparkline?.price.map((number) => JSON.parse(rounding(number)));
+
+  const stringPercentage = `${percentage}`;
   const reducedPrices = prices?.filter((element, i) => i % 5 === 5 - 1);
   const indexes = reducedPrices?.map((element, i) => i);
 
-  const stringPercentage = `${percentage}`;
   const color = () => {
-    if (stringPercentage.includes("-")) {
+    if (stringPercentage?.includes("-")) {
       return "red";
     }
     return "#00ff5f";
   };
 
-  const data = {
+  let data = {
     labels: indexes,
     datasets: [
       {
         borderColor: color,
         data: reducedPrices,
         backgroundColor: "red",
+        indexAxis: "x",
       },
     ],
   };
@@ -43,11 +45,15 @@ const TableGraph = ({ sparkline, percentage }) => {
         tension: 0.5,
       },
     },
-
+    animation: false,
     scales: {
       x: {
+        type: "linear",
         display: false,
         grid: {
+          display: false,
+        },
+        ticks: {
           display: false,
         },
       },
@@ -56,13 +62,16 @@ const TableGraph = ({ sparkline, percentage }) => {
         grid: {
           display: false,
         },
+        ticks: {
+          display: false,
+        },
       },
     },
   };
 
   return (
     <Container>
-      <Chart data={data} type="line" options={options}></Chart>
+      <Chart data={data} type="line" options={options} />
     </Container>
   );
 };

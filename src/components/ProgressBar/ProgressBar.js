@@ -14,6 +14,7 @@ const ProgressBar = ({
   percentage,
   mainColor,
   offColor,
+  compact = false,
 }) => {
   const abbreviate = (number) => {
     if (number === null) {
@@ -31,18 +32,28 @@ const ProgressBar = ({
 
   return (
     <Container>
-      <LabelContainer>
-        <Label>
-          <ColorLabel color={mainColor} />
-          <LabelText color={mainColor}>{abbreviate(numerator)}</LabelText>
-        </Label>
-        <Label>
-          <ColorLabel color={offColor} />
-          <LabelText color={offColor}>{abbreviate(denominator)}</LabelText>
-        </Label>
-      </LabelContainer>
-      <Bar color={offColor}>
-        <Filled percentage={percentage} color={mainColor}></Filled>
+      {!compact && (
+        <LabelContainer>
+          <Label>
+            <ColorLabel style={{ backgroundColor: mainColor }} />
+            <LabelText style={{ color: mainColor }}>
+              {abbreviate(numerator)}
+            </LabelText>
+          </Label>
+          <Label>
+            <ColorLabel style={{ backgroundColor: offColor }} />
+            <LabelText style={{ color: mainColor }}>
+              {abbreviate(denominator)}
+            </LabelText>
+          </Label>
+        </LabelContainer>
+      )}
+
+      <Bar style={{ backgroundColor: offColor }}>
+        <Filled
+          percentage={percentage}
+          style={{ backgroundColor: mainColor }}
+        ></Filled>
       </Bar>
     </Container>
   );

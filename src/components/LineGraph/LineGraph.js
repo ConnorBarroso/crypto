@@ -1,136 +1,105 @@
-import React, { useRef, useState, useEffect } from "react";
+import React from "react";
+// eslint-disable-next-line no-unused-vars
+import Chart from "chart.js/auto";
+import format from "date-fns/format";
 import {
   StyledLine,
   GraphLabelContainer,
-  LabelSymbol,
   LabelValue,
   LabelDate,
-  LabelVolume,
   GraphContainer,
 } from "./LineGraph.styles";
-import { Chart as ChartJS } from "chart.js";
-import format from "date-fns/format";
-import { getGraphData, rounding } from "utils";
+import { rounding } from "utils";
 
-class LineGraph extends React.Component {
-  state = {
-    graph: null,
-    data: null,
-  };
+const LineGraph = (props) => {
+  const priceSparkline = props.prices?.map((i) => rounding(i[1]));
+  const dates = props.prices?.map((i) => i[0]);
+  const labelDates = dates?.map((i) => format(i, "dd"));
+  const tooltipDates = dates?.map((i) => format(i, "dd-MM-yyyy"));
 
-  createGradient = (ctx) => {
-    const gradient = ctx.createLinearGradient(0, 0, 0, 100);
-    gradient.addColorStop(0, "white");
-    gradient.addColorStop(0.5, "grey");
-    gradient.addColorStop(1, "blue");
-    return gradient;
-  };
+  const priceFormatter = new Intl.NumberFormat(undefined, {
+    style: "currency",
+    currency: props.currency,
+  });
 
-  chartRef = React.createRef();
-
-  dates = this.state.graph?.prices?.map((i) => i[0]);
-
-  async componentDidMount() {
-    console.log("chartRef:", this.chartRef);
-
-    const graphData = await getGraphData(this.props.fetchData);
-    this.setState({ graph: graphData });
-
-    const priceSparkline = this.state.graph?.prices?.map((i) => rounding(i[1]));
-
-    const labelDates = this.dates?.map((i) => format(i, "dd"));
-
-    const chart = this.chartRef?.current;
-    console.log("chart:", chart);
-    if (chart) {
-      const ctx = chart.ctx;
-
-      // let priceSparkline = {
-      //   datasets: [],
-      // };
-
-      const background = this.createGradient(ctx);
-
-      const data = {
-        labels: labelDates,
-        datasets: [
-          {
-            borderColor: "#ff6c23",
-            borderWidth: 2,
-            pointColor: "#fff",
-            pointStrokeColor: "#ff6c23",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "#ff6c23",
-            data: priceSparkline,
-            backgroundColor: background,
-          },
-        ],
-      };
-      this.setState({ data });
-    }
+  let displayData = {};
+  if (priceSparkline) {
+    displayData = {
+      price: priceFormatter.format(
+        rounding(priceSparkline[priceSparkline.length - 1])
+      ),
+      date: format(dates[dates.length - 1], "MMMM dd, yyyy"),
+    };
   }
 
-  render() {
-    const tooltipDates = this.dates?.map((i) => format(i, "dd-MM-yyyy"));
-    const options = {
-      plugins: {
-        legend: {
-          display: false,
+  const data = {
+    labels: labelDates,
+    datasets: [
+      {
+        data: priceSparkline,
+        borderColor: "#0CF864",
+        backgroundColor: (context) => {
+          const ctx = context.chart.ctx;
+          const gradient = ctx.createLinearGradient(0, 120, 0, 350);
+          gradient.addColorStop(0, "rgba(0, 255, 95, .5)");
+          gradient.addColorStop(1, "rgba(0, 255, 95, .1)");
+          return gradient;
         },
-        tooltip: {
-          callbacks: {
-            title: (tooltipItem, data) => {
-              const title = tooltipDates[tooltipItem[0].dataIndex];
-              return title;
-            },
-          },
-        },
+        pointRadius: 0,
+        borderWidth: 3,
+        fill: true,
       },
+    ],
+  };
 
+  const options = {
+    plugins: {
+      legend: {
+        display: false,
+      },
       elements: {
         line: {
-          borderColor: "#00ff5f",
-          tension: 0.1,
-        },
-        point: {
-          radius: 0,
+          tension: 0,
         },
       },
-
-      scales: {
-        x: {
-          grid: {
-            display: false,
+      tooltip: {
+        callbacks: {
+          title: (tooltipItem, data) => {
+            const title = tooltipDates[tooltipItem?.[0]?.dataIndex];
+            return title;
           },
         },
-        y: {
+      },
+    },
+
+    scales: {
+      x: {
+        grid: {
           display: false,
-          grid: {
-            display: false,
-          },
         },
       },
-    };
-
-    return (
-      <GraphContainer>
+      y: {
+        display: false,
+        grid: {
+          display: false,
+        },
+      },
+    },
+  };
+  const { price, date } = displayData;
+  return (
+    <GraphContainer>
+      {displayData && (
         <GraphLabelContainer>
-          <LabelSymbol>{this.props.sorted?.[0]?.symbol}</LabelSymbol>
-          <LabelValue>
-            {this.props.symbol}
-            {this.props.sorted?.[0]?.current_price}
-          </LabelValue>
-          <LabelDate>{this.props.formatCurrentDate}</LabelDate>
+          <div>Bitcoin</div>
+          Price
+          <LabelValue>{price}</LabelValue>
+          <LabelDate>{date}</LabelDate>
         </GraphLabelContainer>
-        <StyledLine
-          data={this.state.data}
-          ref={this.chartRef}
-          type="line"
-          options={options}
-        />
-      </GraphContainer>
-    );
-  }
-}
+      )}
+      <StyledLine type="line" data={data} options={options} />
+    </GraphContainer>
+  );
+};
 
 export default LineGraph;

@@ -1,6 +1,14 @@
 import React from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
 import ReactLoading from "react-loading";
+import {
+  InfiniteLoader,
+  List,
+  WindowScroller,
+  AutoSizer,
+  CellMeasurer,
+  CellMeasurerCache,
+} from "react-virtualized";
+
 import { getCoinList } from "utils";
 import { colors } from "./utils";
 import {
@@ -15,12 +23,12 @@ import {
   TableMarketCap,
   TableSupply,
   TableGraphContainer,
+  ListContainer,
 } from "./TableDisplay.styles";
 
 import { ListedCoin } from "components";
 
 class TableDisplay extends React.Component {
-  //renamed order to apiOrder and set sortingOrder to use the same values as apiOrder
   state = {
     fetchData: {
       sortBy: "market_cap",
@@ -34,7 +42,6 @@ class TableDisplay extends React.Component {
     loading: true,
     sortLocal: false,
   };
-  //moved and renamed sortedWithColors function here.
   addColors = (array) => {
     const coloredList = array?.map((coinData, i) => {
       const colorCombo = colors[i % colors.length];
@@ -61,8 +68,7 @@ class TableDisplay extends React.Component {
         currency: this.props.currency,
       },
     }));
-    const listData = await getCoinList(this.state.fetchData);
-    //using addColors function
+    const listData = await getCoinList(this.state?.fetchData);
     const coloredList = this.addColors(listData);
     this.setState({ list: coloredList, loading: false });
   }
@@ -83,7 +89,6 @@ class TableDisplay extends React.Component {
   }
 
   handleFetchData = (key, value) => {
-    //set sortLocal to false even if the fetchData is the same, so the user can easily reset it back to the API list
     this.setState({ sortLocal: false });
 
     if (this.state.fetchData[key] === value) return;
@@ -99,7 +104,6 @@ class TableDisplay extends React.Component {
   };
 
   handleSortingProp = (sortingProp) => {
-    //setting sortLocal in my local sorting functions
     this.setState({ sortingProp: sortingProp, sortLocal: true });
   };
 
@@ -132,8 +136,8 @@ class TableDisplay extends React.Component {
 
     const coinList = [...this.state.list];
 
-    //set the value of displayedList to be either the sorted array or the state array based off the sortLocal state
-    let displayedList;
+    let displayedList = coinList;
+
     if (this.state.sortLocal) {
       displayedList = coinList?.sort((a, b) => {
         if (sortingOrder === "asc") {
@@ -141,10 +145,7 @@ class TableDisplay extends React.Component {
         }
         return b[sortingProp] - a[sortingProp];
       });
-    } else {
-      displayedList = coinList;
     }
-
     return (
       <TableContainer>
         {loading && <ReactLoading type={"spinningBubbles"} />}
@@ -219,25 +220,52 @@ class TableDisplay extends React.Component {
             <p>Last 7 days</p>
           </TableGraphContainer>
         </HeadingContainer>
-        <InfiniteScroll
-          dataLength={this.state.list?.length}
-          next={this.handleNext}
-          hasMore={true}
-          style={{
-            width: "100%",
-            boxSizing: "border-box",
-            overflowY: "hidden",
-          }}
-        >
-          {displayedList?.map((coin, i) => (
-            <ListedCoin
-              key={coin.id}
-              currency={currency}
-              data={coin}
-              index={i}
-            />
-          ))}
-        </InfiniteScroll>
+        <ListContainer>
+          <AutoSizer>
+            {({ width, height }) => (
+              <List
+                height={300}
+                width={width}
+                rowHeight={60}
+                rowCount={displayedList?.length}
+                rowRenderer={({ key, index, style }) => {
+                  const coin = displayedList[index];
+                  return (
+                    <ListedCoin
+                      key={key}
+                      currency={currency}
+                      data={coin}
+                      style={style}
+                      index={index}
+                    />
+                  );
+                }}
+              />
+            )}
+          </AutoSizer>
+        </ListContainer>
+
+        {/* {<InfiniteScrollContainer>
+          <InfiniteScroll
+            dataLength={this.state.list?.length}
+            next={this.handleNext}
+            hasMore={true}
+            style={{
+              width: "100%",
+              boxSizing: "border-box",
+              overflowY: "hidden",
+            }}
+          >
+            {displayedList?.map((coin, i) => (
+              <ListedCoin
+                key={coin.id}
+                currency={currency}
+                data={coin}
+                index={i}
+              />
+            ))}
+          </InfiniteScroll>
+        </InfiniteScrollContainer>} */}
       </TableContainer>
     );
   }

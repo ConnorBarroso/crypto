@@ -5,7 +5,6 @@ import styled from "styled-components";
 export const Container = styled.div`
   width: 100%;
   height: 300px;
-  max-width: 100vw;
 `;
 
 export const StyledNextArrow = styled(NextArrowIcon)`
@@ -24,14 +23,14 @@ export const StyledPrevArrow = styled(PrevArrowIcon)`
 `;
 export const SlickContainer = styled.div`
   display: none;
-  background-color: ${({ theme }) => theme.colors.off};
+  background-color: ${({ theme }) => theme.colors.main};
   border-radius: 10px;
   padding: 15px;
   padding-left: 4px;
-  width: 330px;
-  height: 230px;
+  width: 100%;
+  height: 100%;
   margin: auto;
-  @media (max-width: ${({ theme }) => theme.breakPoints.mobile}) {
+  @media (max-width: ${({ theme }) => theme.breakPoints.tablet}) {
     display: block;
   }
 `;

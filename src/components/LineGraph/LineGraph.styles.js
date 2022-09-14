@@ -3,11 +3,13 @@ import { Chart } from "react-chartjs-2";
 
 export const StyledLine = styled(Chart)`
   margin: 70px 0 10px;
+  height: 100%;
+  width: 100%;
 `;
 
 export const GraphContainer = styled.div`
   margin: auto;
-  max-width: 700px;
+  width: 45%;
   position: relative;
   background-color: ${({ theme }) => theme.colors.main};
   border-radius: 10px;
@@ -28,6 +30,7 @@ export const GraphLabelContainer = styled.div`
     background-color: ${({ theme }) => theme.colors.off}95;
     box-shadow: 10px 10px 8px ${({ theme }) => theme.colors.off}95;
   }
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 export const LabelSymbol = styled.p`
