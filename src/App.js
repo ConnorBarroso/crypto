@@ -3,13 +3,12 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
   Redirect,
 } from "react-router-dom";
 import { CoinsPage, CoinPage, Portfolio } from "pages";
 import { HeaderInfo, NavBar } from "components";
 import { StyledHeader, PageWrapper } from "./App.styles";
-// look into redux persist
+
 class App extends React.Component {
   state = {
     currency: "usd",
