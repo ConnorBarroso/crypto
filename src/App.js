@@ -27,7 +27,7 @@ class App extends React.Component {
   };
 
   render() {
-    const currency = this.state.currency;
+    const { currency } = this.state;
 
     return (
       <Router>
