@@ -3,7 +3,7 @@ import { Chart } from "react-chartjs-2";
 
 export const Container = styled.div`
   max-width: 200px;
-  max-height: 50px;
+  max-height: 42px;
 `;
 
 export const StyledChart = styled(Chart)`
