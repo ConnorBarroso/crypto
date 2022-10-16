@@ -1,14 +1,5 @@
 import React from "react";
 import ReactLoading from "react-loading";
-import {
-  InfiniteLoader,
-  List,
-  WindowScroller,
-  AutoSizer,
-  CellMeasurer,
-  CellMeasurerCache,
-} from "react-virtualized";
-
 import { getCoinList } from "utils";
 import { colors } from "./utils";
 import {
@@ -26,7 +17,7 @@ import {
   ListContainer,
 } from "./TableDisplay.styles";
 
-import { ListedCoin } from "components";
+import CoinList from "components/CoinList";
 
 class TableDisplay extends React.Component {
   state = {
@@ -39,7 +30,7 @@ class TableDisplay extends React.Component {
     sortingProp: "current_price",
     sortingOrder: "desc",
     list: [],
-    loading: true,
+    loading: false,
     sortLocal: false,
   };
   addColors = (array) => {
@@ -56,7 +47,7 @@ class TableDisplay extends React.Component {
   };
 
   async componentDidMount() {
-    this.setState({ loading: true });
+    this.setState({ loading: false });
     const localSortBy = localStorage.getItem("sortBy");
     const localOrder = localStorage.getItem("order");
 
@@ -71,20 +62,34 @@ class TableDisplay extends React.Component {
     const listData = await getCoinList(this.state?.fetchData);
     const coloredList = this.addColors(listData);
     this.setState({ list: coloredList, loading: false });
+    console.log(this.state);
   }
   async componentDidUpdate(prevProps, prevState) {
+    const { fetchData } = this.state;
+    const { apiOrder, sortBy, page } = fetchData;
+    const prevFetchData = prevState.fetchData;
+    const prevApiOrder = prevFetchData.apiOrder;
+    const prevSortBy = prevFetchData.sortBy;
+    const prevPage = prevFetchData.page;
+    const prevList = prevState.list;
+
     if (prevProps.currency !== this.props.currency) {
       this.setState({
         fetchData: { ...prevState.fetchData, currency: this.props.currency },
       });
-    }
-    if (
-      prevState.fetchData.apiOrder !== this.state.fetchData.apiOrder ||
-      prevState.fetchData.sortBy !== this.state.fetchData.sortBy
-    ) {
-      const listData = await getCoinList(this.state.fetchData);
+      const listData = await getCoinList(fetchData);
       const coloredList = this.addColors(listData);
       this.setState({ list: coloredList });
+    }
+    if (prevApiOrder !== apiOrder || prevSortBy !== sortBy) {
+      const listData = await getCoinList(fetchData);
+      const coloredList = this.addColors(listData);
+      this.setState({ list: coloredList });
+    }
+    if (prevPage !== page) {
+      const listData = await getCoinList(fetchData);
+      const fullList = prevList.concat(this.addColors(listData));
+      this.setState({ list: fullList });
     }
   }
 
@@ -115,23 +120,22 @@ class TableDisplay extends React.Component {
     }
   };
 
-  handleNext = async () => {
+  handleNext = () => {
     this.setState((prevState) => ({
       fetchData: {
         ...prevState.fetchData,
-        page: this.state.fetchData.page + 1,
+        page: prevState.fetchData.page + 1,
       },
     }));
+  };
 
-    const newData = await getCoinList(this.state.fetchData);
-
-    const newList = [...this.state.list, ...this.addColors(newData)];
-    this.setState({ list: newList, sortLocal: false });
+  isRowLoaded = ({ index }) => {
+    return !!this.state.list[index];
   };
 
   render() {
     const { fetchData, sortingProp, loading, sortingOrder } = this.state;
-    const { apiOrder, page } = fetchData;
+    const { apiOrder } = fetchData;
     const { currency } = this.props;
 
     const coinList = [...this.state.list];
@@ -146,6 +150,7 @@ class TableDisplay extends React.Component {
         return b[sortingProp] - a[sortingProp];
       });
     }
+    console.log(this.state.list);
     return (
       <TableContainer>
         {loading && <ReactLoading type={"spinningBubbles"} />}
@@ -167,12 +172,11 @@ class TableDisplay extends React.Component {
               ? `Top ${this.state?.list?.length}`
               : `Bottom ${this.state?.list?.length}`}
           </button>
-        </div>
-        <div>
           <button onClick={this.handleSortingOrder}>
             {sortingOrder === "desc" ? "Descending" : "Ascending"}
           </button>
         </div>
+
         <HeadingContainer>
           <TableRank>
             <p>#</p>
@@ -221,51 +225,13 @@ class TableDisplay extends React.Component {
           </TableGraphContainer>
         </HeadingContainer>
         <ListContainer>
-          <AutoSizer>
-            {({ width, height }) => (
-              <List
-                height={300}
-                width={width}
-                rowHeight={60}
-                rowCount={displayedList?.length}
-                rowRenderer={({ key, index, style }) => {
-                  const coin = displayedList[index];
-                  return (
-                    <ListedCoin
-                      key={key}
-                      currency={currency}
-                      data={coin}
-                      style={style}
-                      index={index}
-                    />
-                  );
-                }}
-              />
-            )}
-          </AutoSizer>
+          <CoinList
+            list={displayedList}
+            currency={currency}
+            isRowLoaded={this.isRowLoaded}
+            handleNext={this.handleNext}
+          />
         </ListContainer>
-
-        {/* {<InfiniteScrollContainer>
-          <InfiniteScroll
-            dataLength={this.state.list?.length}
-            next={this.handleNext}
-            hasMore={true}
-            style={{
-              width: "100%",
-              boxSizing: "border-box",
-              overflowY: "hidden",
-            }}
-          >
-            {displayedList?.map((coin, i) => (
-              <ListedCoin
-                key={coin.id}
-                currency={currency}
-                data={coin}
-                index={i}
-              />
-            ))}
-          </InfiniteScroll>
-        </InfiniteScrollContainer>} */}
       </TableContainer>
     );
   }

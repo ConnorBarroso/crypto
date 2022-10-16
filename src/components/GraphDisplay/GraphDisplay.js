@@ -1,6 +1,6 @@
 import React from "react";
 import { Carousel, LineGraph, BarGraph } from "components";
-import { getGraphData, rounding } from "utils";
+import { getGraphData } from "utils";
 import {
   Container,
   DesktopGraphContainer,

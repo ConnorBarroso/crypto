@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 
 export const Container = styled.div`
   display: flex;
-
+  height: 42px;
+  max-height: 42px;
   text-align: left;
   border-bottom: 1px solid #707070;
   margin-bottom: 25px;
