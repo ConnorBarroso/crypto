@@ -112,7 +112,10 @@ class GraphDisplay extends React.Component {
             </ButtonContainer>
           </>
         ) : (
-          <h1 style={{ color: "red" }}> SOMETHING'S GONE WRONG!</h1>
+          <>
+            <h1 style={{ color: "red" }}> SOMETHING'S GONE WRONG!</h1>
+            <button onClick={this.handleGet}>retry</button>
+          </>
         )}
       </Container>
     );

@@ -1,7 +1,5 @@
 import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import ReactLoading from "react-loading";
-
 import { ListedCoin } from "components";
 const CoinList = (props) => {
   const { list, currency, handleNext } = props;

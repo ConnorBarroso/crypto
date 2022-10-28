@@ -141,18 +141,6 @@ class TableDisplay extends React.Component {
     }));
   };
 
-  handleRetry = async () => {
-    this.setState({ loading: true, error: false });
-
-    const listData = await getCoinList(this.state?.fetchData);
-    if (listData instanceof Error === true) {
-      this.setState({ error: true, loading: false });
-      return;
-    }
-    const coloredList = this.addColors(listData);
-    this.setState({ list: coloredList, loading: false });
-  };
-
   isRowLoaded = ({ index }) => {
     return !!this.state.list[index];
   };
