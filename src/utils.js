@@ -1,9 +1,8 @@
 import axios from "axios";
 
 export const get = async (type, data = {}) => {
-  console.log({ data });
   const urls = {
-    market: `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${data?.currency}&order=${data?.sortBy}_${data?.apiOrder}&per_page=50&page=${data?.page}&sparkline=true&price_change_percentage=1h%2C24h%2C7d`,
+    market: `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${data?.currency}&order=${data?.sortBy}_${data?.apiOrder}&per_page=30&page=${data?.page}&sparkline=true&price_change_percentage=1h%2C24h%2C7d`,
     coin: `https://api.coingecko.com/api/v3/coins/${data?.id}`,
     coinHistory: `https://api.coingecko.com/api/v3/${data?.id}/history`,
     coinMarket: `https://api.coingecko.com/api/v3/coins/${data?.id}/market_chart?vs_currency=${data?.currency}&days=${data?.days}&interval=daily`,
@@ -14,7 +13,7 @@ export const get = async (type, data = {}) => {
 
     return data;
   } catch (error) {
-    console.error(error);
+    return error;
   }
 };
 

@@ -121,13 +121,13 @@ export const TableSupply = styled.span`
   text-align: center;
 `;
 
-export const TableGraphContainer = styled.span`
+export const TableGraphContainer = styled.div`
   display: block;
   @media (max-width: ${({ theme }) => theme.breakPoints.laptop}) {
     display: none;
   }
 
-  flex: 2;
+  flex: 1.5;
   min-width: 150px;
   text-align: right;
   margin-left: 20px;

@@ -13,6 +13,8 @@ class GraphDisplay extends React.Component {
     days: 30,
     chartData: {},
     year: false,
+    error: false,
+    loading: false,
   };
 
   handleDayChange = (num) => {
@@ -21,12 +23,17 @@ class GraphDisplay extends React.Component {
   };
 
   handleGet = async () => {
+    this.setState({ loading: true, error: false });
     const graphData = await getGraphData({
       id: "bitcoin",
       currency: this.props.currency,
       days: this.state.days,
     });
-    this.setState({ chartData: graphData });
+    if (graphData instanceof Error === true) {
+      this.setState({ error: true, loading: false });
+      return;
+    }
+    this.setState({ chartData: graphData, loading: false });
   };
 
   componentDidMount() {
@@ -45,43 +52,68 @@ class GraphDisplay extends React.Component {
   }
   dateArray = [7, 30, 60, 90, 180, 365];
   render() {
+    const currency = this.props.currency;
     const { prices } = this.state.chartData;
     const volumes = this.state.chartData.total_volumes;
-    const days = this.state.days;
+    const { days, loading, error } = this.state;
     return (
       <Container>
-        <MobileGraphContainer>
-          <Carousel>
-            <LineGraph currency={this.props.currency} prices={prices} />
-            <BarGraph currency={this.props.currency} volumes={volumes} />
-          </Carousel>
-        </MobileGraphContainer>
+        {!error ? (
+          <>
+            <MobileGraphContainer>
+              <Carousel>
+                <LineGraph
+                  currency={currency}
+                  prices={prices}
+                  loading={loading}
+                />
+                <BarGraph
+                  currency={currency}
+                  volumes={volumes}
+                  loading={loading}
+                />
+              </Carousel>
+            </MobileGraphContainer>
 
-        <DesktopGraphContainer>
-          <LineGraph currency={this.props.currency} prices={prices} />
-          <BarGraph currency={this.props.currency} volumes={volumes} />
-        </DesktopGraphContainer>
-
-        <ButtonContainer>
-          {this.dateArray.map((num) => {
-            if (days === num) {
-              return (
-                <DayButton
-                  key={num}
-                  active
-                  onClick={() => this.handleDayChange(num)}
-                >
-                  {num}
-                </DayButton>
-              );
-            }
-            return (
-              <DayButton key={num} onClick={() => this.handleDayChange(num)}>
-                {num}
-              </DayButton>
-            );
-          })}
-        </ButtonContainer>
+            <DesktopGraphContainer>
+              <LineGraph
+                currency={currency}
+                prices={prices}
+                loading={loading}
+              />
+              <BarGraph
+                currency={currency}
+                volumes={volumes}
+                loading={loading}
+              />
+            </DesktopGraphContainer>
+            <ButtonContainer>
+              {this.dateArray.map((num) => {
+                if (days === num) {
+                  return (
+                    <DayButton
+                      key={num}
+                      active
+                      onClick={() => this.handleDayChange(num)}
+                    >
+                      {num}
+                    </DayButton>
+                  );
+                }
+                return (
+                  <DayButton
+                    key={num}
+                    onClick={() => this.handleDayChange(num)}
+                  >
+                    {num}
+                  </DayButton>
+                );
+              })}
+            </ButtonContainer>
+          </>
+        ) : (
+          <h1 style={{ color: "red" }}> SOMETHING'S GONE WRONG!</h1>
+        )}
       </Container>
     );
   }

@@ -1,5 +1,6 @@
 import React from "react";
 import format from "date-fns/format";
+import ReactLoading from "react-loading";
 
 import {
   Chart as ChartJS,
@@ -11,7 +12,7 @@ import {
   Legend,
 } from "chart.js";
 
-import { StyledBar, buttonContainer } from "./BarGraph.styles";
+import { StyledBar } from "./BarGraph.styles";
 import {
   GraphContainer,
   GraphLabelContainer,
@@ -30,7 +31,7 @@ ChartJS.register(
 );
 
 const BarGraph = (props) => {
-  const { volumes, currency } = props;
+  const { volumes, currency, loading } = props;
 
   const volumeArray = volumes?.map((i) => rounding(i[1]));
 
@@ -103,15 +104,19 @@ const BarGraph = (props) => {
   const { volume, date } = displayData;
   return (
     <GraphContainer>
-      {displayData && (
-        <GraphLabelContainer>
-          <div>Bitcoin</div>
-          Volume
-          <LabelValue>{volume}</LabelValue>
-          <LabelDate>{date}</LabelDate>
-        </GraphLabelContainer>
+      {!loading ? (
+        <>
+          <GraphLabelContainer>
+            <div>Bitcoin</div>
+            Volume
+            <LabelValue>{volume}</LabelValue>
+            <LabelDate>{date}</LabelDate>
+          </GraphLabelContainer>
+          <StyledBar type="bar" data={data} options={options} />
+        </>
+      ) : (
+        <ReactLoading type={"spin"} />
       )}
-      {<StyledBar type="bar" data={data} options={options} />}
     </GraphContainer>
   );
 };
