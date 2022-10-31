@@ -32,6 +32,7 @@ class TableDisplay extends React.Component {
     list: [],
     loading: false,
     sortLocal: false,
+    error: false,
   };
   addColors = (array) => {
     const coloredList = array?.map((coinData, i) => {
@@ -46,8 +47,18 @@ class TableDisplay extends React.Component {
     return coloredList;
   };
 
+  handleGet = async () => {
+    const listData = await getCoinList(this.state?.fetchData);
+    if (listData instanceof Error === true) {
+      this.setState({ error: true, loading: false });
+      return;
+    }
+    const coloredList = this.addColors(listData);
+    this.setState({ list: coloredList, loading: false });
+  };
+
   async componentDidMount() {
-    this.setState({ loading: false });
+    this.setState({ loading: true });
     const localSortBy = localStorage.getItem("sortBy");
     const localOrder = localStorage.getItem("order");
 
@@ -59,13 +70,11 @@ class TableDisplay extends React.Component {
         currency: this.props.currency,
       },
     }));
-    const listData = await getCoinList(this.state?.fetchData);
-    const coloredList = this.addColors(listData);
-    this.setState({ list: coloredList, loading: false });
-    console.log(this.state);
+    this.handleGet(this.state.fetchData);
   }
   async componentDidUpdate(prevProps, prevState) {
     const { fetchData } = this.state;
+    const currency = this.props.currency;
     const { apiOrder, sortBy, page } = fetchData;
     const prevFetchData = prevState.fetchData;
     const prevApiOrder = prevFetchData.apiOrder;
@@ -73,21 +82,24 @@ class TableDisplay extends React.Component {
     const prevPage = prevFetchData.page;
     const prevList = prevState.list;
 
-    if (prevProps.currency !== this.props.currency) {
+    if (prevProps.currency !== currency) {
       this.setState({
-        fetchData: { ...prevState.fetchData, currency: this.props.currency },
+        fetchData: { ...prevState.fetchData, currency: currency },
       });
-      const listData = await getCoinList(fetchData);
-      const coloredList = this.addColors(listData);
-      this.setState({ list: coloredList });
+
+      this.handleGet(fetchData);
     }
+
     if (prevApiOrder !== apiOrder || prevSortBy !== sortBy) {
-      const listData = await getCoinList(fetchData);
-      const coloredList = this.addColors(listData);
-      this.setState({ list: coloredList });
+      this.handleGet(fetchData);
     }
+
     if (prevPage !== page) {
       const listData = await getCoinList(fetchData);
+      if (listData instanceof Error === true) {
+        this.setState({ error: true, loading: false });
+        return;
+      }
       const fullList = prevList.concat(this.addColors(listData));
       this.setState({ list: fullList });
     }
@@ -134,7 +146,8 @@ class TableDisplay extends React.Component {
   };
 
   render() {
-    const { fetchData, sortingProp, loading, sortingOrder } = this.state;
+    const { fetchData, sortingProp, loading, sortingOrder, error, sortLocal } =
+      this.state;
     const { apiOrder } = fetchData;
     const { currency } = this.props;
 
@@ -142,7 +155,7 @@ class TableDisplay extends React.Component {
 
     let displayedList = coinList;
 
-    if (this.state.sortLocal) {
+    if (sortLocal) {
       displayedList = coinList?.sort((a, b) => {
         if (sortingOrder === "asc") {
           return a[sortingProp] - b[sortingProp];
@@ -150,10 +163,8 @@ class TableDisplay extends React.Component {
         return b[sortingProp] - a[sortingProp];
       });
     }
-    console.log(this.state.list);
     return (
       <TableContainer>
-        {loading && <ReactLoading type={"spinningBubbles"} />}
         <div>
           <button onClick={() => this.handleFetchData("sortBy", "market_cap")}>
             Sort by market cap
@@ -225,12 +236,21 @@ class TableDisplay extends React.Component {
           </TableGraphContainer>
         </HeadingContainer>
         <ListContainer>
-          <CoinList
-            list={displayedList}
-            currency={currency}
-            isRowLoaded={this.isRowLoaded}
-            handleNext={this.handleNext}
-          />
+          {!loading && !error ? (
+            <CoinList
+              list={displayedList}
+              currency={currency}
+              isRowLoaded={this.isRowLoaded}
+              handleNext={this.handleNext}
+            />
+          ) : error ? (
+            <>
+              <h1 style={{ color: "red" }}> SOMETHING'S GONE WRONG!</h1>
+              <button onClick={this.handleGet}>retry</button>
+            </>
+          ) : (
+            <ReactLoading type={"spin"} />
+          )}
         </ListContainer>
       </TableContainer>
     );

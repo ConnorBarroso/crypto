@@ -1,17 +1,24 @@
 import React from "react";
+import ReactLoading from "react-loading";
 import { get } from "utils";
 import { ProgressBar } from "components";
-import { Bar, Filled } from "../ProgressBar/ProgressBar.styles";
 import { Container, StyledList, StyledItem } from "./HeaderInfo.styles";
 
 class HeaderInfo extends React.Component {
   state = {
     data: {},
+    error: false,
+    loading: false,
   };
 
   handleGet = async () => {
+    this.setState({ loading: true, error: false });
     const globalData = await get("global");
-    this.setState({ data: globalData.data });
+    if (globalData instanceof Error === true) {
+      this.setState({ error: true, loading: false });
+      return;
+    }
+    this.setState({ data: globalData.data, loading: false });
   };
 
   componentDidMount() {
@@ -19,18 +26,13 @@ class HeaderInfo extends React.Component {
   }
 
   render() {
-    const { data } = this.state;
+    const { data, loading, error } = this.state;
     const { active_cryptocurrencies, markets, market_cap_percentage } = data;
-    if (!data) {
-      return <div>Loading...</div>;
-    }
     const btcPercent = Math.round(market_cap_percentage?.btc);
     const ethPercent = Math.round(market_cap_percentage?.btc);
-    const mainColor = "";
-    const offColor = "";
     return (
       <Container>
-        {data && (
+        {!loading && !error ? (
           <StyledList>
             <StyledItem>Coins: {active_cryptocurrencies}</StyledItem>
             <StyledItem>Exchange: {markets}</StyledItem>
@@ -53,6 +55,13 @@ class HeaderInfo extends React.Component {
               />
             </StyledItem>
           </StyledList>
+        ) : error ? (
+          <>
+            <h4 style={{ color: "red" }}> err</h4>
+            <button onClick={this.handleGet}>retry</button>
+          </>
+        ) : (
+          <ReactLoading type={"spin"} />
         )}
       </Container>
     );

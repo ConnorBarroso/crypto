@@ -1,4 +1,5 @@
 import React from "react";
+import ReactLoading from "react-loading";
 // eslint-disable-next-line no-unused-vars
 import Chart from "chart.js/auto";
 import format from "date-fns/format";
@@ -16,6 +17,7 @@ const LineGraph = (props) => {
   const dates = props.prices?.map((i) => i[0]);
   const labelDates = dates?.map((i) => format(i, "dd"));
   const tooltipDates = dates?.map((i) => format(i, "dd-MM-yyyy"));
+  const loading = props.loading;
 
   const priceFormatter = new Intl.NumberFormat(undefined, {
     style: "currency",
@@ -89,15 +91,19 @@ const LineGraph = (props) => {
   const { price, date } = displayData;
   return (
     <GraphContainer>
-      {displayData && (
-        <GraphLabelContainer>
-          <div>Bitcoin</div>
-          Price
-          <LabelValue>{price}</LabelValue>
-          <LabelDate>{date}</LabelDate>
-        </GraphLabelContainer>
+      {!loading ? (
+        <>
+          <GraphLabelContainer>
+            <div>Bitcoin</div>
+            Price
+            <LabelValue>{price}</LabelValue>
+            <LabelDate>{date}</LabelDate>
+          </GraphLabelContainer>
+          <StyledLine type="line" data={data} options={options} />
+        </>
+      ) : (
+        <ReactLoading type={"spin"} />
       )}
-      <StyledLine type="line" data={data} options={options} />
     </GraphContainer>
   );
 };
